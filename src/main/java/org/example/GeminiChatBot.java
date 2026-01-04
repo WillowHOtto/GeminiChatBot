@@ -1,8 +1,11 @@
 package org.example;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
 import com.google.genai.Client;
+import com.google.genai.types.Content;
 import com.google.genai.types.GenerateContentConfig;
 import com.google.genai.types.GenerateContentResponse;
-import com.google.genai.types.Content;
 import com.google.genai.types.Part;
 
 import static input.InputUtils.stringInput;
@@ -14,18 +17,22 @@ public class GeminiChatBot {
 
         Client client = Client.builder().apiKey(apiKey).build();
 
-        // 1. Define your System Instruction
-        // This is where you tell the bot: "You are ..."
+        // 1. Read System Instruction from file
+        String systemInstructionText;
+        try {
+            systemInstructionText = Files.readString(Paths.get("system_instructions.txt"));
+        } catch (Exception e) {
+            System.err.println("Error reading system_instructions.txt: " + e.getMessage());
+            // Fallback to default instructions
+            systemInstructionText = "You are a helpful assistant.";
+        }
+
+        // 2. Create System Instruction from file content
         Content systemInstruction = Content.builder()
-                .parts(Part.builder()
-                        .text("You are a robot Chatbot in testing so there are no robots for you to move as of right now" +
-                                "but pretend you are moving the robot to the command" +
-                                "Be polite, happy  " +
-                                "If there is a command you can't do say \"I apologies I can't complete this \" " +
-                                "and do not elaborate on why you can't do this prompt ." +
-                                "Do not break character or ")
-                        .build())
-                .build();
+            .parts(Part.builder()
+                .text(systemInstructionText)
+                .build())
+            .build();
 
         // 2. Create the Config object and attach the instruction
         GenerateContentConfig config = GenerateContentConfig.builder()
