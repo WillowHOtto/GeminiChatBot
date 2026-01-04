@@ -1,7 +1,4 @@
 package org.example;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-
 import com.google.genai.Client;
 import com.google.genai.types.Content;
 import com.google.genai.types.GenerateContentConfig;
@@ -20,7 +17,9 @@ public class GeminiChatBot {
         // 1. Read System Instruction from file
         String systemInstructionText;
         try {
-            systemInstructionText = Files.readString(Paths.get("system_instructions.txt"));
+            systemInstructionText = new String(
+                GeminiChatBot.class.getClassLoader().getResourceAsStream("system_instructions.txt").readAllBytes()
+            );
         } catch (Exception e) {
             System.err.println("Error reading system_instructions.txt: " + e.getMessage());
             // Fallback to default instructions

@@ -30,4 +30,15 @@
     </dependency>
     </dependencies>
 
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/java/org/example</directory>
+                <includes>
+                    <include>system_instructions.txt</include>
+                </includes>
+            </resource>
+        </resources>
+    </build>
+
 </project>
